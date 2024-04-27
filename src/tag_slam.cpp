@@ -236,6 +236,7 @@ namespace tagslam {
   void TagSlam::cameraInfoCallback(const sensor_msgs::CameraInfoConstPtr &msg, CameraPtr cam) {
     if (!cam->hasIntrinsics()) {
       cam->setIntrinsics(CameraIntrinsics::parse(msg));
+      ROS_INFO_STREAM("Intrinsics: " << cam->getIntrinsics());
     }
   }
 
