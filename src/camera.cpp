@@ -19,7 +19,13 @@ namespace tagslam {
     CameraPtr camPtr(new Camera());
     Camera &cam = *camPtr; // short hand
     cam.name_ = name;
-    cam.intrinsics_ = CameraIntrinsics::parse(config);
+    cam.infoTopic_ = xml::parse<string>(config, "infotopic", "");
+    if (cam.infoTopic_ == "") {
+      cam.intrinsics_ = CameraIntrinsics::parse(config);
+      cam.has_intrinsics_ = true;
+    } else {
+      cam.has_intrinsics_ = false;
+    }
     cam.imageTopic_ = xml::parse<string>(config, "rostopic");
     cam.tagTopic_   = xml::parse<string>(config, "tagtopic", "");
     cam.rigName_    = xml::parse<string>(config, "rig_body");

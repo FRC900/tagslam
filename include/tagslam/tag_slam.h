@@ -82,6 +82,7 @@ namespace tagslam {
     void run();
     void finalize(bool optimize = true);
     void subscribe();
+    void cameraInfoCallback(const sensor_msgs::CameraInfoConstPtr &msg, CameraPtr cam);
     bool runOnline() const { return (inBagFile_.empty()); }
 
     template<typename SyncType, typename T1, typename T2, typename T3>
@@ -247,6 +248,7 @@ namespace tagslam {
     std::shared_ptr<LiveExactCompressedSync> liveExactCompressedSync_;
     std::shared_ptr<LiveApproximateCompressedSync>
     liveApproximateCompressedSync_;
+    std::vector<ros::Subscriber> cameraInfoSubscribers_;
 
     std::unordered_map<int, std::vector<ReMap>>  tagRemap_;
     std::vector<std::map<ros::Time, std::set<int>>> squash_;

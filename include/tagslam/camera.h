@@ -26,6 +26,8 @@ namespace tagslam {
     const string &getName()       const { return (name_); }
     const string &getImageTopic() const { return (imageTopic_); }
     const string &getTagTopic()   const { return (tagTopic_); }
+    const string &getInfoTopic()  const { return (infoTopic_); }
+    const bool   &hasIntrinsics() const { return (has_intrinsics_); }
     const string &getFrameId()    const { return (frameId_); }
     const string &getRigName()    const { return (rigName_); }
     const std::shared_ptr<Body> getRig() const { return (rig_); }
@@ -33,6 +35,10 @@ namespace tagslam {
     const CameraIntrinsics& getIntrinsics() const { return (intrinsics_); }
     int  getIndex() const { return (index_); }
     void setRig(const std::shared_ptr<Body> &rig) { rig_ = rig; }
+    void setIntrinsics(const CameraIntrinsics &ci) {
+      intrinsics_ = ci;
+      has_intrinsics_ = true;
+    }
     
     // --- static methods
     static CameraPtr parse_camera(const string &name,
@@ -43,13 +49,15 @@ namespace tagslam {
     // -------- variables -------
     string                name_;
     int                   index_{-1};
-    string                imageTopic_; // topic for images
-    string                tagTopic_;   // topic for tags
-    string                frameId_;    // ros frame id of camera
-    string                rigName_;    // name of rig body
-    std::shared_ptr<Body> rig_;        // pointer to rig body
-    CameraIntrinsics      intrinsics_; // intrinsic calibration
-    PoseNoise             wiggle_;     // how rigid the ext calib is
+    string                imageTopic_;     // topic for images
+    string                tagTopic_;       // topic for tags
+    string                frameId_;        // ros frame id of camera
+    string                rigName_;        // name of rig body
+    std::shared_ptr<Body> rig_;            // pointer to rig body
+    CameraIntrinsics      intrinsics_;     // intrinsic calibration
+    string                infoTopic_;      // camera info topic
+    bool                  has_intrinsics_; // if intrinsics exist yet (if using camera info)
+    PoseNoise             wiggle_;         // how rigid the ext calib is
   };
 
   using CameraPtr      = Camera::CameraPtr;

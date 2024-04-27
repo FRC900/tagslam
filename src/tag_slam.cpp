@@ -225,6 +225,18 @@ namespace tagslam {
               std::placeholders::_3), syncQueueSize_));
       }
     }
+    for (auto &cam: cameras_) {
+      std::string infoTopic = cam->getInfoTopic();
+      if (!(infoTopic.empty())) {
+        cameraInfoSubscribers_.push_back(nh_.subscribe<sensor_msgs::CameraInfo>(infoTopic, 1, boost::bind(&TagSlam::cameraInfoCallback, this, _1, cam)));
+      }
+    }
+  }
+
+  void TagSlam::cameraInfoCallback(const sensor_msgs::CameraInfoConstPtr &msg, CameraPtr cam) {
+    if (!cam->hasIntrinsics()) {
+      cam->setIntrinsics(CameraIntrinsics::parse(msg));
+    }
   }
 
   void TagSlam::run() {
@@ -637,6 +649,12 @@ namespace tagslam {
     const std::vector<TagArrayConstPtr> &msgvec1,
     const std::vector<ImageConstPtr> &msgvec2,
     const std::vector<OdometryConstPtr> &msgvec3) {
+    for (const auto &cam : cameras_) {
+      if (!cam->hasIntrinsics()) {
+        ROS_WARN_STREAM("TagSLAM: No intrinsics yet for camera " << cam->getName() << ", waiting");
+        return;
+      }
+    }
     profiler_.reset("processImages");
     process_images<ImageConstPtr>(msgvec2, &images_);
     profiler_.record("processImages");
@@ -649,6 +667,12 @@ namespace tagslam {
     const std::vector<TagArrayConstPtr> &msgvec1,
     const std::vector<CompressedImageConstPtr> &msgvec2,
     const std::vector<OdometryConstPtr> &msgvec3) {
+    for (const auto &cam : cameras_) {
+      if (!cam->hasIntrinsics()) {
+        ROS_WARN_STREAM("TagSLAM: No intrinsics yet for camera " << cam->getName() << ", waiting");
+        return;
+      }
+    }
     profiler_.reset("processCompressedImages");
     process_images<CompressedImageConstPtr>(msgvec2, &images_);
     profiler_.record("processCompressedImages");

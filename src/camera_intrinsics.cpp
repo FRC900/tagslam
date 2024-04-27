@@ -68,6 +68,31 @@ namespace tagslam {
     }
   }
 
+  CameraIntrinsics
+  CameraIntrinsics::parse(const sensor_msgs::CameraInfoConstPtr &msg) {
+    CameraIntrinsics ci;
+    ci.cameraModel_= "pinhole";
+    const string distModel = msg->distortion_model;
+    if (distMap.count(distModel) == 0) {
+      BOMB_OUT("unknown distortion model: " << distModel);
+    }
+    ci.distortionModel_ = distMap[distModel];
+    ci.distortionCoeffs_ = msg->D;
+    ci.K_ = {msg->K[0], msg->K[4], msg->K[2], msg->K[5]};
+    ci.resolution_ = {static_cast<int>(msg->width), static_cast<int>(msg->height)};
+    // precompute K and D
+    ci.cvK_ = (cv::Mat_<double>(3,3) <<
+               ci.K_[0], 0.0,  ci.K_[2],
+               0.0,  ci.K_[1], ci.K_[3],
+               0.0,   0.0,  1.0);
+    const auto &D = ci.distortionCoeffs_;
+    ci.cvD_ = cv::Mat_<double>(1, D.size());
+    for (unsigned int i = 0; i < D.size(); i++) {
+      ci.cvD_.at<double>(i) = D[i];
+    }
+    return (ci);
+  }
+
   void
   CameraIntrinsics::writeYaml(std::ostream &f, const string &pf) const {
     f << pf << "camera_model: " << cameraModel_ << std::endl;

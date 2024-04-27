@@ -6,6 +6,7 @@
 #include "tagslam/distortion_model.h"
 
 #include <ros/ros.h>
+#include <sensor_msgs/CameraInfo.h>
 #include <opencv2/core/core.hpp>
 
 #include <vector>
@@ -29,6 +30,7 @@ namespace tagslam {
     void writeYaml(std::ostream &f, const string &pf) const;
     // static functions
     static CameraIntrinsics parse(XmlRpc::XmlRpcValue config);
+    static CameraIntrinsics parse(const sensor_msgs::CameraInfoConstPtr &msg);
   private:
     static CameraIntrinsics parse_no_error(XmlRpc::XmlRpcValue config);
     std::vector<double> distortionCoeffs_;
