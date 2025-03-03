@@ -102,7 +102,7 @@ namespace tagslam {
       public:
         Odom(ros::NodeHandle &nh, const std::string &topic,
              OSyncT* sync, int qs) : topic_(topic), sync_(sync) {
-          sub_ = nh.subscribe(topic, qs, &Odom::callback, this);
+          sub_ = nh.subscribe(topic, qs, &Odom::callback, this, ros::TransportHints().tcpNoDelay());
         }
       private:
         void callback(const OdometryConstPtr &odom) {

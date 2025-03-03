@@ -44,7 +44,7 @@ namespace tagslam {
         config[std::string("coordinate_measurements")];
       if (meas.getType() == XmlRpc::XmlRpcValue::TypeArray) {
         auto fpts = factor::Coordinate::parse(meas, tagFactory);
-        for (const auto f: fpts) {
+        for (const auto &f: fpts) {
           if (!f->getTag()->getBody()->isStatic()) {
             BOMB_OUT("measured body must be static: " << *f);
           }

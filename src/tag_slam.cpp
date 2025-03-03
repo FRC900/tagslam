@@ -1050,11 +1050,11 @@ namespace tagslam {
     for (const auto &te: m) {
       write_time(f, te.first);
       double err(0);
-      for (const auto fe: te.second) {
+      for (const auto &fe: te.second) {
         err += fe.second;
       }
       f << err;
-      for (const auto fe: te.second) {
+      for (const auto &fe: te.second) {
         f << " " << (*fe.first) << ":err=" << fe.second;
       }
       f << std::endl;

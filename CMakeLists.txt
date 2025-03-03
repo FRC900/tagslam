@@ -11,6 +11,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+include ("../cmake_modules/CMakeOpt.cmake")
 add_definitions(-g -Wall -Wno-misleading-indentation -Wno-int-in-bool-context)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake")
 

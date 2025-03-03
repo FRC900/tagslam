@@ -115,8 +115,8 @@ static gtsam::Matrix2 D2dintrinsic(double x,   double y,
   return DK * DR;
 }
 
-struct GeometricParams {
-  GeometricParams(double xa, double ya,
+struct GeometricParams3DS2 {
+  GeometricParams3DS2(double xa, double ya,
                   double p1, double p2,
                   double k1, double k2, double k3,
                   double k4, double k5, double k6) : x(xa), y(ya) {
@@ -147,7 +147,7 @@ struct GeometricParams {
 };
 
 gtsam::Point2 Cal3DS3::uncalibrateNoIntrinsics(const gtsam::Point2& p) const {
-  GeometricParams gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
+  GeometricParams3DS2 gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
   return gtsam::Point2(gp.xp, gp.yp);
 }
 
@@ -156,7 +156,7 @@ gtsam::Point2 Cal3DS3::uncalibrate(const gtsam::Point2& p,
                                    gtsam::OptionalJacobian<2,12> H1,
                                    gtsam::OptionalJacobian<2,2> H2) const {
   
-  GeometricParams gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
+  GeometricParams3DS2 gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
   gtsam::Matrix2 DK;
   if (H1 || H2) DK << fx_, 0.0, 0.0, fy_;
 
@@ -203,7 +203,7 @@ gtsam::Point2 Cal3DS3::calibrate(const gtsam::Point2& pi, const double tol) cons
 
 /* ************************************************************************* */
 gtsam::Matrix2 Cal3DS3::D2d_intrinsic(const gtsam::Point2& p) const {
-  GeometricParams gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
+  GeometricParams3DS2 gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
   gtsam::Matrix2 DK;
   DK << fx_, 0.0, 0.0, fy_;
   return (D2dintrinsic(gp.x, gp.y, gp.x2, gp.y2, gp.xy,
@@ -214,7 +214,7 @@ gtsam::Matrix2 Cal3DS3::D2d_intrinsic(const gtsam::Point2& p) const {
 /* ************************************************************************* */
 Eigen::Matrix<double, 2, 12>
 Cal3DS3::D2d_calibration(const gtsam::Point2& p) const {
-  GeometricParams gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
+  GeometricParams3DS2 gp(p.x(), p.y(), p1_, p2_, k_[0], k_[1], k_[2], k_[3], k_[4], k_[5]);
   gtsam::Matrix2 DK;
   DK << fx_, 0.0, 0.0, fy_;
   return (D2dcalibration(gp.x, gp.y, gp.xp, gp.yp, gp.x2, gp.y2, gp.xy,

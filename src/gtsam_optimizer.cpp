@@ -259,7 +259,7 @@ namespace tagslam {
 
   double GTSAMOptimizer::getMaxError() const {
     double me(0);
-    for (const auto i: fullGraph_) {
+    for (const auto &i: fullGraph_) {
       double e = i->error(values_);
       if (e > me) {
         me = e;
@@ -270,7 +270,7 @@ namespace tagslam {
   
   double GTSAMOptimizer::checkForLargeErrors(double thresh) const {
     double me(0);
-    for (const auto i: fullGraph_) {
+    for (const auto &i: fullGraph_) {
       double e = i->error(values_);
       if (e > me) {
         me = e;

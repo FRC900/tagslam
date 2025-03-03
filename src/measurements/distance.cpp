@@ -42,7 +42,7 @@ namespace tagslam {
       XmlRpc::XmlRpcValue meas = config[std::string("distance_measurements")];
       if (meas.getType() == XmlRpc::XmlRpcValue::TypeArray) {
         auto factors = factor::Distance::parse(meas, tagFactory);
-        for (const auto f: factors) {
+        for (const auto &f: factors) {
           if (!f->getTag(0)->getBody()->isStatic()
               || !f->getTag(1)->getBody()->isStatic()) {
             BOMB_OUT("measured bodies must be static: " << *f);
